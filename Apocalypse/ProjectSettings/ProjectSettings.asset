@@ -4,7 +4,7 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 15
-  productGUID: a3650c2b22a5c51438f606d6dbd545d9
+  productGUID: 83fb7bd5e3f2e9c4cbefb2313d4df984
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
-  productName: DarkRoom
+  productName: Apocalypse
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -611,9 +611,9 @@ PlayerSettings:
   facebookXfbml: 0
   facebookFrictionlessRequests: 1
   apiCompatibilityLevel: 6
-  cloudProjectId: 8db33937-ef23-4ee8-aa09-9f54e71b5c2e
+  cloudProjectId: fd01c134-80ff-42e2-b89e-9e4668405568
   framebufferDepthMemorylessMode: 0
-  projectName: DarkRoom
+  projectName: Apocalypse
   organizationId: chengjiawu0728
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
