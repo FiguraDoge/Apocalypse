@@ -1,0 +1,16 @@
+{
+  "source": "Unity",
+  "applications": [
+    {
+      "app_key": "application.generated.unity.apocalypse.exe",
+      "launch_type": "url",
+      "url": "steam://launch/",
+      "action_manifest_path": "C:\\Users\\daveyj\\Desktop\\Apocalypse-master\\Apocalypse-master\\Apocalypse\\actions.json",
+      "strings": {
+        "en_us": {
+          "name": "Apocalypse [Testing]"
+        }
+      }
+    }
+  ]
+}
