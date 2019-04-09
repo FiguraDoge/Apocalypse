@@ -7,19 +7,23 @@ public class Row : MonoBehaviour
 {
     public GameObject rightHand;
     public GameObject leftHand;
+    public GameObject boat;
+    public Transform seat;
+    public PlayerManager playerManager;
 
     private Rigidbody rbr;
     private Rigidbody rbl;
     private Rigidbody boatRB;
 
-    public SteamVR_Behaviour_Pose trackedObjectLeft;
-    public SteamVR_Behaviour_Pose trackedObjectRight;
+    private SteamVR_Behaviour_Pose trackedObjectLeft;
+    private SteamVR_Behaviour_Pose trackedObjectRight;
 
     void Start()
     {
+        playerManager = PlayerManager.instance;
         rbr = rightHand.GetComponent<Rigidbody>();
         rbl = leftHand.GetComponent<Rigidbody>();
-        boatRB = this.gameObject.GetComponent<Rigidbody>();
+        boatRB = boat.GetComponent<Rigidbody>();
 
         trackedObjectRight = rightHand.GetComponent<SteamVR_Behaviour_Pose>();
         trackedObjectLeft = leftHand.GetComponent<SteamVR_Behaviour_Pose>();
@@ -27,30 +31,43 @@ public class Row : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("left hand velocity = " + trackedObjectLeft.GetVelocity());
-        Debug.Log("right hand velocity = " + trackedObjectRight.GetVelocity());
-
-        if (trackedObjectLeft.GetVelocity().z < -1) {
-            this.gameObject.GetComponent<Rigidbody>().AddForce(transform.right * .5f);
-            if (Vector3.Dot(boatRB.velocity, transform.forward) <= 2f)
-            {
-                this.gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * .5f);
-            }
-            this.transform.Rotate(0, 1, 0, Space.Self);
-        }
-        if (trackedObjectRight.GetVelocity().z < -1)
+        // Debug check
+        // Debug.Log("left hand velocity = " + trackedObjectLeft.GetVelocity());
+        // Debug.Log("right hand velocity = " + trackedObjectRight.GetVelocity());
+        
+        // If the player is in row mode 
+        if (playerManager.mode != "ROW")
         {
-            this.gameObject.GetComponent<Rigidbody>().AddForce(-transform.right * .5f);
-            if (Vector3.Dot(boatRB.velocity, transform.forward) <= 5f)
-            {
-                this.gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * .5f);
-            }
-            this.transform.Rotate(0, -1, 0, Space.Self);
+            return;
         }
+        else
+        {
+            // If player pull the left controller
+            // The boat should go right and forward
+            if (trackedObjectLeft.GetVelocity().z < -1)
+            {
+                boatRB.AddForce(boat.transform.right * .5f);
+                // This is a velocity cap for the forawrd direction
+                if (Vector3.Dot(boatRB.velocity, boat.transform.forward) <= 2f)
+                    boatRB.AddForce(boat.transform.forward * .5f);
+                boat.transform.Rotate(0, 1f, 0, Space.Self);
+            }
 
-        // Vector3 dir = boatRB.velocity;
-        //dir.Normalize();
-        this.gameObject.GetComponent<Rigidbody>().AddForce(boatRB.velocity * -.075f);
+            // If player pull the right controller
+            // The boat should go left and forward
+            if (trackedObjectRight.GetVelocity().z < -1)
+            {
+                boatRB.AddForce(-transform.right * .5f);
+                // This is a velocity cap for the forawrd direction
+                if (Vector3.Dot(boatRB.velocity, boat.transform.forward) <= 5f)
+                    boatRB.AddForce(boat.transform.forward * .5f);
+                boat.transform.Rotate(0, -1f, 0, Space.Self);
+            }
 
+            // Adding friction to the boat 
+            boatRB.AddForce(boatRB.velocity * -.075f);
+
+            this.gameObject.transform.position = seat.position;
+        }
     }
 }
