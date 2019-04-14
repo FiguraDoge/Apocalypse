@@ -12,10 +12,18 @@ public class PlayerManager : MonoBehaviour
     }
     #endregion
 
-    public string mode;
+    public GameObject rightHand;
+    public GameObject leftHand;
 
-    void Start()
+    private GameObject boat;
+
+    public void setBoat(GameObject boat)
     {
-        mode = "WALK";
+        this.boat = boat;
+    }
+
+    public GameObject getBoat()
+    {
+        return this.boat;
     }
 }
