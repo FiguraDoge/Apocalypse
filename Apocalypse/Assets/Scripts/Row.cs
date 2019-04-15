@@ -1,29 +1,34 @@
-﻿using System.Collections;
+﻿using Ditzelgames;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
 
 /*
  * Row is attacked to boat, and row only works when player is on boards 
+ * Row requires waterfloat script, since the boat need to be on the water
+ * waterfloat requires rigidbody to make boat float on the water
  */
 
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(WaterFloat))]
 public class Row : MonoBehaviour
 {
-    private bool playerOnBoard;
-    public PlayerManager playerManager;
-    public Transform seat;
+ 
+    public Transform seat;                  // The seat for player
+    public Transform Motor;                 // The power source, where we apply force to
+    public float Drag;                      // The drag when boat rotate
+    public float MaxSpeed;                  // THe max speed that boat can reach
+    public float rotateSpeed;               // The speed that boat rotates
+    public float accelerateFactor;          // The acceleration
+    public float decelerateFactor;          // The deceleration of boat
 
-    private Rigidbody rbr;
-    private Rigidbody rbl;
+    private Rigidbody boatRB;               // The rigidbody of boat
+    private bool playerOnBoard;             // 1: player is on boat; 0: not on boat 
+    private PlayerManager playerManager;    // A static script attached to player, used to track player
 
-    private GameObject boat;
-    private Rigidbody boatRB;
-
-    private GameObject rightHand;
-    private GameObject leftHand;
-    private SteamVR_Behaviour_Pose trackedObjectLeft;
-    private SteamVR_Behaviour_Pose trackedObjectRight;
+    private SteamVR_Behaviour_Pose trackedObjectLeft;       // left hand
+    private SteamVR_Behaviour_Pose trackedObjectRight;      // right hand
 
     public void setPlayerOnBoard(bool val)
     {
@@ -35,56 +40,77 @@ public class Row : MonoBehaviour
         return this.playerOnBoard;
     }
 
+    // TO DO
+    // Only return true when hand is pull to player 
+    private bool CheckRow(SteamVR_Behaviour_Pose hand)
+    {
+        return false;
+    }
+
+    // Debug check
+    private void debugPrint()
+    {
+        Debug.Log("left hand velocity = " + trackedObjectLeft.GetVelocity());
+        Debug.Log("right hand velocity = " + trackedObjectRight.GetVelocity());
+    }
+
     void Start()
     {
         playerOnBoard = false;
         playerManager = PlayerManager.instance;
+        boatRB = this.gameObject.GetComponent<Rigidbody>();
 
-        rbr = playerManager.rightHand.GetComponent<Rigidbody>();
-        rbl = playerManager.leftHand.GetComponent<Rigidbody>();
-
-        boat = this.gameObject;
-        boatRB = boat.GetComponent<Rigidbody>();
-
-        trackedObjectRight = playerManager.rightHand.GetComponent<SteamVR_Behaviour_Pose>();
         trackedObjectLeft = playerManager.leftHand.GetComponent<SteamVR_Behaviour_Pose>();
+        trackedObjectRight = playerManager.rightHand.GetComponent<SteamVR_Behaviour_Pose>();
     }
 
     void Update()
     {
-        // Debug check
-        // Debug.Log("left hand velocity = " + trackedObjectLeft.GetVelocity());
-        // Debug.Log("right hand velocity = " + trackedObjectRight.GetVelocity());
-        
+        // Player stay on the boat
+        playerManager.gameObject.transform.position = seat.position;
+    }
+
+    void FixedUpdate()
+    {
         // If the player is in row mode 
         if (!playerOnBoard)
             return;
-      
+
+        Vector3 forceDirection = Vector3.Scale(new Vector3(1, 0, 1), transform.forward);
+        int rotateDirection = 0;
+
         // If player pull the left controller
         // The boat should go right and forward
-        if (trackedObjectLeft.GetVelocity().z < -1)
+        if (CheckRow(trackedObjectLeft))
         {
-            boatRB.AddForce(boat.transform.right * .5f);
-            // This is a velocity cap for the forawrd direction
-            if (Vector3.Dot(boatRB.velocity, boat.transform.forward) <= 2f)
-                boatRB.AddForce(boat.transform.forward * .5f);
-            boat.transform.Rotate(0, 1f, 0, Space.Self);
+            rotateDirection += 1;
+            PhysicsHelper.ApplyForceToReachVelocity(boatRB, forceDirection * MaxSpeed, accelerateFactor);
         }
 
-        // If player pull the right controller
-        // The boat should go left and forward
-        if (trackedObjectRight.GetVelocity().z < -1)
+
+        if (CheckRow(trackedObjectRight))
         {
-            boatRB.AddForce(-transform.right * .5f);
-            // This is a velocity cap for the forawrd direction
-            if (Vector3.Dot(boatRB.velocity, boat.transform.forward) <= 5f)
-                boatRB.AddForce(boat.transform.forward * .5f);
-            boat.transform.Rotate(0, -1f, 0, Space.Self);
+            rotateDirection -= 1;
+            PhysicsHelper.ApplyForceToReachVelocity(boatRB, forceDirection * MaxSpeed, accelerateFactor);
         }
 
-        // Adding friction to the boat 
-        boatRB.AddForce(boatRB.velocity * -.075f);
-        playerManager.gameObject.transform.position = seat.position;
+        // TO DO
+        // Test boat rotation
+        boatRB.AddForceAtPosition(rotateDirection * transform.right * rotateSpeed, Motor.position);
 
+        /*
+        // The angle that the velocity of the boat need to rotate
+        float angle;
+        if (Vector3.Cross(transform.forward, boatRB.velocity).y < 0)
+            angle = Vector3.SignedAngle(boatRB.velocity, transform.forward, Vector3.up) * Drag;
+        else
+            angle = Vector3.SignedAngle(boatRB.velocity, Vector3.zero, Vector3.up) * Drag;
+        
+        boatRB.velocity = Quaternion.AngleAxis(angle, Vector3.up) * boatRB.velocity;
+        */
+
+        // Slow down the speed
+        PhysicsHelper.ApplyForceToReachVelocity(boatRB, -1 * forceDirection * MaxSpeed, decelerateFactor);
     }
+
 }
