@@ -19,14 +19,13 @@ public class Dock_Ground : MonoBehaviour
     public SteamVR_Input_Sources handType;
     public SteamVR_Action_Boolean grabAction;
 
-    public GameObject boardText;        // the UI text
-    public GameObject boat;             // the boat in port 
-    public GameObject dock_water;       // corresponding dock_water
-    public PlayerManager playerManager;
+    public GameObject boat;             // The boat in port 
+    public GameObject dock_water;       // The corresponding dock_water
+    public GameObject boardText;        // The attached text UI 
 
-    private Dock_Water dockWater;
-    private Transform seat;             // the seat for player on boat 
-    private Text text;
+    private Text text;                  // The text in boardText
+    private Transform seat;             // The seat for player on boat 
+    private PlayerManager playerManager;
 
     private bool CheckTrigger()
     {
@@ -45,10 +44,9 @@ public class Dock_Ground : MonoBehaviour
 
     void Start()
     {
-        seat = boat.transform.GetChild(0);
-        dockWater = dock_water.GetComponent<Dock_Water>();
-        playerManager = PlayerManager.instance;
         text = boardText.GetComponent<Text>();
+        seat = boat.transform.GetChild(0);          // Object Seat should always be the first child of boat
+        playerManager = PlayerManager.instance;
     }
 
     void OnTriggerStay(Collider other)
@@ -65,11 +63,10 @@ public class Dock_Ground : MonoBehaviour
                     GameObject player = other.gameObject;
                     player.transform.position = seat.position;
 
-                    boat.GetComponent<Row>().setPlayerOnBoard(true);
-                    player.GetComponent<Rigidbody>().useGravity = false;
-
-                    playerManager.setBoat(boat);
-                    this.boat = null;
+                    boat.GetComponent<Row>().setPlayerOnBoard(true);            // Tell boat that player is on board
+                    player.GetComponent<Rigidbody>().useGravity = false;        // Prevent boat from flipping 
+                    playerManager.setBoat(boat);                                // Set player boat 
+                    this.boat = null;                                           // Boat leaves this dock
                 }
             }
             else

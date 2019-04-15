@@ -19,14 +19,16 @@ public class Dock_Water : MonoBehaviour
     public SteamVR_Input_Sources handType;
     public SteamVR_Action_Boolean grabAction;
 
-    public GameObject dock_ground;
-    public Transform landPosition;      // This is going to be where player land
-    public Transform dockPosition;    // This is going to be position after player park the boat
-    public GameObject portText;
-    public PlayerManager playerManager;
 
-    private Text text;
-    private Dock_Ground dockGround;
+    public GameObject dock_ground;      // The coressponding dock_ground
+    public GameObject portText;         // The attached text UI
+    public Transform landPosition;      // This is going to be where player land
+    public Transform dockPosition;      // This is going to be position after player park the boat
+
+    private Text text;                  // The text in portText
+    private Dock_Ground dockGround;     // The dock script of coressponding dock ground
+    private PlayerManager playerManager;
+
 
     private bool CheckTrigger()
     {
@@ -35,8 +37,8 @@ public class Dock_Water : MonoBehaviour
 
     void Start()
     {
-        playerManager = PlayerManager.instance;
         text = portText.GetComponent<Text>();
+        playerManager = PlayerManager.instance;
         dockGround = dock_ground.GetComponent<Dock_Ground>();
     }
 
@@ -51,19 +53,19 @@ public class Dock_Water : MonoBehaviour
                 
                 if (CheckTrigger())
                 {
-                    // Move player to the ground, and player is no longer a child of boat
+                    // Process Player  
                     GameObject player = other.gameObject;
-                    player.transform.position = landPosition.position;
-                    player.GetComponent<Rigidbody>().useGravity = true;
+                    player.transform.position = landPosition.position;      // Move player to the ground 
+                    player.GetComponent<Rigidbody>().useGravity = true;     // Set gravity to true since player is on ground now
 
-                    // Move boat to the parkPosition
+                    // Process Boat
                     GameObject boat = playerManager.getBoat();
-                    boat.transform.position = dockPosition.position;
-                    boat.GetComponent<Row>().setPlayerOnBoard(false);
+                    playerManager.setBoat(null);                            // Tell player that it is no longer on boat
+                    dockGround.setBoat(boat);                               // dock_ground now has available boat 
+                      
+                    boat.transform.position = dockPosition.position;        // Move boat to the port
+                    boat.GetComponent<Row>().setPlayerOnBoard(false);       // Tell boat that player is no longer on the boat
                     boat.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
-
-                    playerManager.setBoat(null);
-                    dockGround.setBoat(boat);
                 }
             }
             else

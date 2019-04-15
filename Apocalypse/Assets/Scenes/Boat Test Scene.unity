@@ -1120,11 +1120,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seat: {fileID: 1340630560}
   Motor: {fileID: 347670281}
-  SteerPower: 0.5
-  Power: 5
-  MaxSpeed: 8
   Drag: 0.1
-  playerManager: {fileID: 0}
+  MaxSpeed: 10
+  rotateSpeed: 0.1
+  accelerateFactor: 1
+  decelerateFactor: 0.5
 --- !u!1 &931984881
 GameObject:
   m_ObjectHideFlags: 0
