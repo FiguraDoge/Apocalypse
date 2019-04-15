@@ -67,7 +67,8 @@ public class Row : MonoBehaviour
     void Update()
     {
         // Player stay on the boat
-        playerManager.gameObject.transform.position = seat.position;
+        if (playerOnBoard)
+            playerManager.gameObject.transform.position = seat.position;
     }
 
     void FixedUpdate()

@@ -5,13 +5,7 @@ using Valve.VR;
 
 public class ClimbingTrigger : MonoBehaviour
 {
-    private bool leftHandTagged;
-    private bool rightHandTagged;
-
-    private Vector3 prevLeftPos;
-    private Vector3 prevRightPos;
-
-    public SteamVR_Input_Sources LeftHandSource;
+    public SteamVR_Input_Sources leftHandSource;
     public SteamVR_Input_Sources rightHandSource;
     public SteamVR_Action_Boolean climbAction;
 
@@ -23,6 +17,12 @@ public class ClimbingTrigger : MonoBehaviour
     public bool xMove;
     public bool yMove;
     public bool zMove;
+
+    private bool leftHandTagged;
+    private bool rightHandTagged;
+
+    private Vector3 prevLeftPos;
+    private Vector3 prevRightPos;
 
     // Start is called before the first frame update
     void Start()
@@ -38,39 +38,38 @@ public class ClimbingTrigger : MonoBehaviour
         
         if(leftHandTagged || rightHandTagged)
         {
-            //disable gravity when either of the hand is triggered.
+            // Disable gravity when tagged hand is supposed to hold trigger.
             playerGravityRigibBody.useGravity = false;
-            //deactivate when the player release the trigger
-            if (!checkTrigger(LeftHandSource))
-            {
+
+            // Deactivate tag when the player release the trigger
+            if (!checkTrigger(leftHandSource))
                 leftHandTagged = false;
-            }
 
             if (!checkTrigger(rightHandSource))
-            {
                 rightHandTagged = false;
-            }
-            if(!rightHandTagged && !leftHandTagged)
-            {
-                //enable gravity so player may fall down
-                playerGravityRigibBody.useGravity = true;
-            }
 
-            //depending on the current hands status, move the player
-            if(leftHandTagged && rightHandTagged)
+            // Enable gravity so player can fall down
+            if (!rightHandTagged && !leftHandTagged)
+                playerGravityRigibBody.useGravity = true; 
+
+            // Depending on the current hands status, move the player
+            // 1. Both hands are tagged
+            if (leftHandTagged && rightHandTagged)
             {
-                //when both hands are triggered
-                //do nothing for right now
-                
+                // To Do
+                // When both hands are triggered
+                // Do nothing for right now
             }
+            // 2. Left hand is tagged
             else if (leftHandTagged)
             {
-                //when only left hand is attached, move the player according to the y value change in left hand's position
+                // When only left hand is attached, move the player according to the y value change in left hand's position
                 PlayerObject.transform.position -= new Vector3(xMove ? leftHandObject.transform.position.x - prevLeftPos.x : 0, yMove ? leftHandObject.transform.position.y - prevLeftPos.y : 0, zMove ? leftHandObject.transform.position.z - prevLeftPos.z : 0);
             }
+            // 3. Right hand is tagged
             else if (rightHandTagged)
             {
-                //when only right hand is attached, move the player according to the y value change in right hand's position
+                // When only right hand is attached, move the player according to the y value change in right hand's position
                 PlayerObject.transform.position -= new Vector3(xMove ? rightHandObject.transform.position.x - prevRightPos.x : 0, yMove ? rightHandObject.transform.position.y - prevRightPos.y : 0, zMove ? rightHandObject.transform.position.z - prevRightPos.z : 0);
             }
 
@@ -87,20 +86,21 @@ public class ClimbingTrigger : MonoBehaviour
          * 1 - Both hands have a child with collider in a layer that can interact with the layer the trigger is in
          * 2 - the child component on left hand is tagged "LeftHand", and the child component on the right hand is tagged "Right Hand"
          */
-        if (other.gameObject.tag.Equals("LeftHand") && checkTrigger(LeftHandSource))
+        //Debug.Log(other.gameObject.tag);
+        //Debug.Log(other.gameObject.layer);
+        //Debug.Log(other.gameObject.name);
+        if (other.gameObject.tag.Equals("LeftHand") && checkTrigger(leftHandSource))
         {
-            //Debug.Log("Triggered By LeftHand");
+            Debug.Log("Triggered By LeftHand");
             leftHandTagged = true;
         }
 
-        if (other.gameObject.tag.Equals("RightHand"))
+        if (other.gameObject.tag.Equals("RightHand") && checkTrigger(rightHandSource))
         {
-            //Debug.Log("Triggered By RightHand");
-            if (checkTrigger(rightHandSource))
-            {
-                rightHandTagged = true;
-            }
+            Debug.Log("Triggered By RightHand");
+            rightHandTagged = true;
         }
+
         //Debug.Log("Collided with layer: " + other.gameObject.layer);
         //Debug.Log("LeftHandTagged: " + leftHandTagged);
         //Debug.Log("RightHandTagged: " + rightHandTagged);

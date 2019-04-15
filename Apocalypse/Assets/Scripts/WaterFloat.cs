@@ -55,7 +55,7 @@ public class WaterFloat : MonoBehaviour
         // Set waterLinePoints and waterLine
         for (int i = 0; i < floatPoints.Length; i++)
         {
-            // height
+            // Height
             waterLinePoints[i] = floatPoints[i].position;
             waterLinePoints[i].y = Wave.GetHeight(floatPoints[i].position);
             newWaterLine += waterLinePoints[i].y / floatPoints.Length;
