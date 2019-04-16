@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class PlayerManager : MonoBehaviour
 {
     #region Singleton
@@ -11,11 +12,16 @@ public class PlayerManager : MonoBehaviour
         instance = this;
     }
     #endregion
-
-    public GameObject rightHand;
     public GameObject leftHand;
-
+    public GameObject rightHand;
+   
     private GameObject boat;
+    private Rigidbody playerRB;
+
+    void Start()
+    {
+        playerRB = this.gameObject.GetComponent<Rigidbody>();
+    }
 
     public void setBoat(GameObject boat)
     {
@@ -25,5 +31,10 @@ public class PlayerManager : MonoBehaviour
     public GameObject getBoat()
     {
         return this.boat;
+    }
+    
+    public void setGravity(bool val)
+    {
+        playerRB.useGravity = val;
     }
 }

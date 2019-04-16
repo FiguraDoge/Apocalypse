@@ -56,7 +56,7 @@ public class Dock_Water : MonoBehaviour
                     // Process Player  
                     GameObject player = other.gameObject;
                     player.transform.position = landPosition.position;      // Move player to the ground 
-                    player.GetComponent<Rigidbody>().useGravity = true;     // Set gravity to true since player is on ground now
+                    playerManager.setGravity(true);                         // Set gravity to true since player is on ground now
 
                     // Process Boat
                     GameObject boat = playerManager.getBoat();

@@ -5,30 +5,44 @@ using Valve.VR;
 
 public class ClimbingTrigger : MonoBehaviour
 {
+    // Input source
     public SteamVR_Input_Sources leftHandSource;
     public SteamVR_Input_Sources rightHandSource;
     public SteamVR_Action_Boolean climbAction;
 
-    public GameObject leftHandObject;
-    public GameObject rightHandObject;
-    public GameObject PlayerObject;
-    public Rigidbody playerGravityRigibBody;
-
-    public bool xMove;
+    // Moving direciton on the wall
+    public bool xMove;                  
     public bool yMove;
-    public bool zMove;
+    public bool zMove;                       
 
-    private bool leftHandTagged;
-    private bool rightHandTagged;
+    private bool leftHandTagged;            // Left hand attached 
+    private bool rightHandTagged;           // Right hand attached
 
-    private Vector3 prevLeftPos;
-    private Vector3 prevRightPos;
+    private Vector3 prevLeftPos;            // Previous left hand position
+    private Vector3 prevRightPos;           // Previous right hand position
+    private Vector3 prevPlayerPos;          // Without this, player will slowly fall when both hands are tagged ????
+
+    // Player stats
+    private GameObject playerObject;
+    private GameObject leftHandObject;
+    private GameObject rightHandObject;
+    private PlayerManager playerManager;
+
+    private bool checkTrigger(SteamVR_Input_Sources hand)
+    {
+        return climbAction.GetState(hand);
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         leftHandTagged = false;
         rightHandTagged = false;
+
+        playerManager = PlayerManager.instance;
+        playerObject = playerManager.gameObject;
+        leftHandObject = playerManager.leftHand;
+        rightHandObject = playerManager.rightHand;
     }
 
     // Update is called once per frame
@@ -39,7 +53,7 @@ public class ClimbingTrigger : MonoBehaviour
         if(leftHandTagged || rightHandTagged)
         {
             // Disable gravity when tagged hand is supposed to hold trigger.
-            playerGravityRigibBody.useGravity = false;
+            playerManager.setGravity(false);
 
             // Deactivate tag when the player release the trigger
             if (!checkTrigger(leftHandSource))
@@ -50,7 +64,7 @@ public class ClimbingTrigger : MonoBehaviour
 
             // Enable gravity so player can fall down
             if (!rightHandTagged && !leftHandTagged)
-                playerGravityRigibBody.useGravity = true; 
+                playerManager.setGravity(true);
 
             // Depending on the current hands status, move the player
             // 1. Both hands are tagged
@@ -59,21 +73,23 @@ public class ClimbingTrigger : MonoBehaviour
                 // To Do
                 // When both hands are triggered
                 // Do nothing for right now
+                playerObject.transform.position = prevPlayerPos;    // otherwise, player will fall ????
             }
             // 2. Left hand is tagged
             else if (leftHandTagged)
             {
                 // When only left hand is attached, move the player according to the y value change in left hand's position
-                PlayerObject.transform.position -= new Vector3(xMove ? leftHandObject.transform.position.x - prevLeftPos.x : 0, yMove ? leftHandObject.transform.position.y - prevLeftPos.y : 0, zMove ? leftHandObject.transform.position.z - prevLeftPos.z : 0);
+                playerObject.transform.position -= new Vector3(xMove ? leftHandObject.transform.position.x - prevLeftPos.x : 0, yMove ? leftHandObject.transform.position.y - prevLeftPos.y : 0, zMove ? leftHandObject.transform.position.z - prevLeftPos.z : 0);
             }
             // 3. Right hand is tagged
             else if (rightHandTagged)
             {
                 // When only right hand is attached, move the player according to the y value change in right hand's position
-                PlayerObject.transform.position -= new Vector3(xMove ? rightHandObject.transform.position.x - prevRightPos.x : 0, yMove ? rightHandObject.transform.position.y - prevRightPos.y : 0, zMove ? rightHandObject.transform.position.z - prevRightPos.z : 0);
+                playerObject.transform.position -= new Vector3(xMove ? rightHandObject.transform.position.x - prevRightPos.x : 0, yMove ? rightHandObject.transform.position.y - prevRightPos.y : 0, zMove ? rightHandObject.transform.position.z - prevRightPos.z : 0);
             }
 
         }
+        prevPlayerPos = playerObject.transform.position;
         prevLeftPos = leftHandObject.transform.position;
         prevRightPos = rightHandObject.transform.position;
 
@@ -86,29 +102,19 @@ public class ClimbingTrigger : MonoBehaviour
          * 1 - Both hands have a child with collider in a layer that can interact with the layer the trigger is in
          * 2 - the child component on left hand is tagged "LeftHand", and the child component on the right hand is tagged "Right Hand"
          */
-        //Debug.Log(other.gameObject.tag);
-        //Debug.Log(other.gameObject.layer);
-        //Debug.Log(other.gameObject.name);
+
         if (other.gameObject.tag.Equals("LeftHand") && checkTrigger(leftHandSource))
         {
-            Debug.Log("Triggered By LeftHand");
+            // Debug.Log("Triggered By LeftHand");
             leftHandTagged = true;
         }
 
         if (other.gameObject.tag.Equals("RightHand") && checkTrigger(rightHandSource))
         {
-            Debug.Log("Triggered By RightHand");
+            // Debug.Log("Triggered By RightHand");
             rightHandTagged = true;
         }
-
-        //Debug.Log("Collided with layer: " + other.gameObject.layer);
-        //Debug.Log("LeftHandTagged: " + leftHandTagged);
-        //Debug.Log("RightHandTagged: " + rightHandTagged);
     }
 
-    private bool checkTrigger(SteamVR_Input_Sources hand)
-    {
-        return climbAction.GetState(hand);
-    }
 
 }

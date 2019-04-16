@@ -64,7 +64,7 @@ public class Dock_Ground : MonoBehaviour
                     player.transform.position = seat.position;
 
                     boat.GetComponent<Row>().setPlayerOnBoard(true);            // Tell boat that player is on board
-                    player.GetComponent<Rigidbody>().useGravity = false;        // Prevent boat from flipping 
+                    playerManager.setGravity(false);                            // Prevent boat from flipping 
                     playerManager.setBoat(boat);                                // Set player boat 
                     this.boat = null;                                           // Boat leaves this dock
                 }
