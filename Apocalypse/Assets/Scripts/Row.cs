@@ -17,11 +17,11 @@ public class Row : MonoBehaviour
  
     public Transform seat;                  // The seat for player
     public Transform Motor;                 // The power source, where we apply force to
-    public float Drag;                      // The drag when boat rotate
     public float MaxSpeed;                  // THe max speed that boat can reach
     public float rotateSpeed;               // The speed that boat rotates
     public float accelerateFactor;          // The acceleration
     public float decelerateFactor;          // The deceleration of boat
+    public float rowSensitivity;            // The sensitivity of the player rowing action
 
     private Rigidbody boatRB;               // The rigidbody of boat
     private bool playerOnBoard;             // 1: player is on boat; 0: not on boat 
@@ -40,10 +40,19 @@ public class Row : MonoBehaviour
         return this.playerOnBoard;
     }
 
-    // TO DO
-    // Only return true when hand is pull to player 
+    // Only return true when hand is pull to the oppisite direciton of boat forawrd 
     private bool CheckRow(SteamVR_Behaviour_Pose hand)
     {
+        Vector3 handDir = hand.GetVelocity();                                  // Hand movement direction
+        Vector3 boatDir = this.gameObject.transform.forward;                   // Boat forward
+
+        // Using dot product to find whether angle between hand and boat is greater than 90 degrees
+        // BE CAREFUL !!! THE COMPARISION OPERATOR DEPENDS ON THE BEGINING ROTATION OF THE BOAT !!!!
+        // WHICH MEANS PLAYER FORWARD COULD BE THE OPPISITE OF BOAT FORWARD !!!
+        // Here the boat is actually rotated 180 at the first place, so I use ">" here. 
+        if (Vector3.Dot(handDir, boatDir) > 0 && handDir.magnitude > rowSensitivity)            
+            return true;
+  
         return false;
     }
 
@@ -73,7 +82,7 @@ public class Row : MonoBehaviour
 
     void FixedUpdate()
     {
-        // If the player is in row mode 
+        // If the player is not on the board then return
         if (!playerOnBoard)
             return;
 
@@ -95,23 +104,11 @@ public class Row : MonoBehaviour
             PhysicsHelper.ApplyForceToReachVelocity(boatRB, forceDirection * MaxSpeed, accelerateFactor);
         }
 
-        // TO DO
-        // Test boat rotation
+        // Rotate the boat
         boatRB.AddForceAtPosition(rotateDirection * transform.right * rotateSpeed, Motor.position);
 
-        /*
-        // The angle that the velocity of the boat need to rotate
-        float angle;
-        if (Vector3.Cross(transform.forward, boatRB.velocity).y < 0)
-            angle = Vector3.SignedAngle(boatRB.velocity, transform.forward, Vector3.up) * Drag;
-        else
-            angle = Vector3.SignedAngle(boatRB.velocity, Vector3.zero, Vector3.up) * Drag;
-        
-        boatRB.velocity = Quaternion.AngleAxis(angle, Vector3.up) * boatRB.velocity;
-        */
-
         // Slow down the speed
-        PhysicsHelper.ApplyForceToReachVelocity(boatRB, -1 * forceDirection * MaxSpeed, decelerateFactor);
+        boatRB.AddForceAtPosition(-1 * decelerateFactor * boatRB.velocity, Motor.position);
     }
 
 }

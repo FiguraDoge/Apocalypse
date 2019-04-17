@@ -1,0 +1,28 @@
+This is a todo list. (4/17)
+
+Progress:
+Boat mechanic and Climbing mechanic are ultimatly done!
+
+TODO:
+	From grading rubic:
+	1. UI 
+		Instead of showing text to indicate to get in the boat, we can make a buttom for that. (Suggestion)
+		When player is climbing, change the color or something else to the climbing object player is currently attached to. (Personal Preference)
+		When player is climbing, if player falls from a high position, the camera should black out (like blinking eyes) until player reaches the ground. (Must)
+
+	2. Second scene and 3rd mechanics
+		We can make the second scene as the roof of the building, and the 3rd mechanics will be strike a match to light a bonfire on the roof.
+		The good side is that we finished two tasks in one shoot, and by doing so, we do not need to worry about the last step to climb on the roof.
+		The down side is that we probably will only have one building to climb. If we have multiple buidlings, they may share the same roof scene with serval difference.
+
+	3. Audio
+		5 3d audio
+
+	4. Scene
+		Sky box -- can be easily done by downloading from asset store.
+		lighting
+
+	5. Textures
+		we could use shader. WhiteCity package can be converted to light shader by changing the shader property in the material of the prefab (Personal preference)
+		Google image and apply (Also Personal preference), easy and quick, but I dont know how to do this.
+
