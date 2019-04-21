@@ -16,7 +16,8 @@ using Valve.VR;
 
 public class Dock_Ground : MonoBehaviour
 {
-    public SteamVR_Input_Sources handType;
+    public SteamVR_Input_Sources leftHand;
+    public SteamVR_Input_Sources rightHand;
     public SteamVR_Action_Boolean grabAction;
 
     public GameObject boat;             // The boat in port 
@@ -29,7 +30,7 @@ public class Dock_Ground : MonoBehaviour
 
     private bool CheckTrigger()
     {
-        return grabAction.GetState(handType);
+        return grabAction.GetState(leftHand) || grabAction.GetState(rightHand);
     }
 
     public void setBoat(GameObject boat)
@@ -45,7 +46,7 @@ public class Dock_Ground : MonoBehaviour
     void Start()
     {
         text = boardText.GetComponent<Text>();
-        seat = boat.transform.GetChild(0);          // Object Seat should always be the first child of boat
+        seat = boat.GetComponent<Row>().seat;         
         playerManager = PlayerManager.instance;
     }
 
@@ -59,13 +60,13 @@ public class Dock_Ground : MonoBehaviour
                 text.text = "Press Trigger to enter the boat";
                 if (CheckTrigger())
                 {
-                    // Move player to the position
                     GameObject player = other.gameObject;
-                    player.transform.position = seat.position;
+                    player.transform.position = seat.position;                  // Move player to the seat
 
                     boat.GetComponent<Row>().setPlayerOnBoard(true);            // Tell boat that player is on board
                     playerManager.setGravity(false);                            // Prevent boat from flipping 
                     playerManager.setBoat(boat);                                // Set player boat 
+                    playerManager.setTeleport(false);                           // Disable teleporting while on boat
                     this.boat = null;                                           // Boat leaves this dock
                 }
             }

@@ -16,7 +16,8 @@ using Valve.VR;
 
 public class Dock_Water : MonoBehaviour
 {
-    public SteamVR_Input_Sources handType;
+    public SteamVR_Input_Sources leftHand;
+    public SteamVR_Input_Sources rightHand;
     public SteamVR_Action_Boolean grabAction;
 
 
@@ -32,7 +33,7 @@ public class Dock_Water : MonoBehaviour
 
     private bool CheckTrigger()
     {
-        return grabAction.GetState(handType);
+        return grabAction.GetState(leftHand) || grabAction.GetState(rightHand);
     }
 
     void Start()
@@ -57,6 +58,7 @@ public class Dock_Water : MonoBehaviour
                     GameObject player = other.gameObject;
                     player.transform.position = landPosition.position;      // Move player to the ground 
                     playerManager.setGravity(true);                         // Set gravity to true since player is on ground now
+                    playerManager.setTeleport(true);                        // Enable teleporting again
 
                     // Process Boat
                     GameObject boat = playerManager.getBoat();
@@ -66,6 +68,7 @@ public class Dock_Water : MonoBehaviour
                     boat.transform.position = dockPosition.position;        // Move boat to the port
                     boat.GetComponent<Row>().setPlayerOnBoard(false);       // Tell boat that player is no longer on the boat
                     boat.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+                    boat.transform.rotation = Quaternion.Euler(0, 270, 0);
                 }
             }
             else

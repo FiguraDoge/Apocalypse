@@ -26,3 +26,5 @@ TODO:
 		we could use shader. WhiteCity package can be converted to light shader by changing the shader property in the material of the prefab (Personal preference)
 		Google image and apply (Also Personal preference), easy and quick, but I dont know how to do this.
 
+	6. Animation (Must)
+		Add fish in to the water

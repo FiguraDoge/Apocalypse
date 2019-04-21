@@ -14,7 +14,8 @@ public class PlayerManager : MonoBehaviour
     #endregion
     public GameObject leftHand;
     public GameObject rightHand;
-   
+    public GameObject teleport;
+
     private GameObject boat;
     private Rigidbody playerRB;
 
@@ -36,5 +37,10 @@ public class PlayerManager : MonoBehaviour
     public void setGravity(bool val)
     {
         playerRB.useGravity = val;
+    }
+
+    public void setTeleport(bool val)
+    {
+        teleport.SetActive(val);
     }
 }

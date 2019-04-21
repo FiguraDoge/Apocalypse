@@ -50,7 +50,7 @@ public class Row : MonoBehaviour
         // BE CAREFUL !!! THE COMPARISION OPERATOR DEPENDS ON THE BEGINING ROTATION OF THE BOAT !!!!
         // WHICH MEANS PLAYER FORWARD COULD BE THE OPPISITE OF BOAT FORWARD !!!
         // Here the boat is actually rotated 180 at the first place, so I use ">" here. 
-        if (Vector3.Dot(handDir, boatDir) > 0 && handDir.magnitude > rowSensitivity)            
+        if (Vector3.Dot(handDir, boatDir) < 0 && handDir.magnitude > rowSensitivity)            
             return true;
   
         return false;
