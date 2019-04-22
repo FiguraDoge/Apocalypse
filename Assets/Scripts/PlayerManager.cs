@@ -1,6 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using Valve.VR;
+using Valve.VR.Extras;
+
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerManager : MonoBehaviour
@@ -22,6 +26,7 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
         playerRB = this.gameObject.GetComponent<Rigidbody>();
+        setLayserPointer(false);
     }
 
     public void setBoat(GameObject boat)
@@ -42,5 +47,16 @@ public class PlayerManager : MonoBehaviour
     public void setTeleport(bool val)
     {
         teleport.SetActive(val);
+    }
+
+    public void setPosition(Vector3 position)
+    {
+        this.gameObject.transform.position = position;
+    }
+
+    public void setLayserPointer(bool val)
+    {
+        leftHand.GetComponent<SteamVR_LaserPointer>().enabled = val;
+        rightHand.GetComponent<SteamVR_LaserPointer>().enabled = val;
     }
 }
