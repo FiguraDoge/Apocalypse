@@ -23,6 +23,7 @@ public class Dock_Ground : MonoBehaviour
     public GameObject boat;             // The boat in port 
     public GameObject dock_water;       // The corresponding dock_water
     public GameObject boardText;        // The attached text UI 
+    public GameObject buttonObj;        // The button object
 
     private Text text;                  // The text in boardText
     private Transform seat;             // The seat for player on boat 
@@ -43,6 +44,17 @@ public class Dock_Ground : MonoBehaviour
         return this.boat;
     }
 
+    public void movePlayer()
+    {               
+        boat.GetComponent<Row>().setPlayerOnBoard(true);            // Tell boat that player is on board
+        playerManager.setGravity(false);                            // Prevent boat from flipping 
+        playerManager.setBoat(boat);                                // Set player boat 
+        playerManager.setTeleport(false);                           // Disable teleporting while on boat
+        playerManager.setPosition(seat.position);                   // Move player to the seat
+        playerManager.setLaserPointer(false);                       // Turn off the layser pointer
+        this.boat = null;                                           // Boat leaves this dock
+    }
+
     void Start()
     {
         text = boardText.GetComponent<Text>();
@@ -55,24 +67,16 @@ public class Dock_Ground : MonoBehaviour
         // If player is inside the trigger area
         if (other.tag == "Player")
         {
+            buttonObj.SetActive(true);
             if (boat != null)
             {
                 text.text = "Press Trigger to enter the boat";
-                if (CheckTrigger())
-                {
-                    GameObject player = other.gameObject;
-                    player.transform.position = seat.position;                  // Move player to the seat
-
-                    boat.GetComponent<Row>().setPlayerOnBoard(true);            // Tell boat that player is on board
-                    playerManager.setGravity(false);                            // Prevent boat from flipping 
-                    playerManager.setBoat(boat);                                // Set player boat 
-                    playerManager.setTeleport(false);                           // Disable teleporting while on boat
-                    this.boat = null;                                           // Boat leaves this dock
-                }
+                buttonObj.GetComponent<Button>().interactable = true;
             }
             else
             {
                 text.text = "There is no available boat in this dock";
+                buttonObj.GetComponent<Button>().interactable = false;
             }
         }
     }
@@ -81,5 +85,6 @@ public class Dock_Ground : MonoBehaviour
     void OnTriggerExit()
     {
         text.text = "";
+        buttonObj.SetActive(false);
     }
 }

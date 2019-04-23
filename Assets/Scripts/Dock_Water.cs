@@ -68,7 +68,7 @@ public class Dock_Water : MonoBehaviour
                     boat.transform.position = dockPosition.position;        // Move boat to the port
                     boat.GetComponent<Row>().setPlayerOnBoard(false);       // Tell boat that player is no longer on the boat
                     boat.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
-                    boat.transform.rotation = Quaternion.Euler(0, 270, 0);
+                    boat.transform.rotation = dockPosition.rotation;
                 }
             }
             else
