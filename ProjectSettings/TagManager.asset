@@ -7,6 +7,9 @@ TagManager:
   - Boat
   - LeftHand
   - RightHand
+  - projectile
+  - FxTemporaire
+  - TagLight
   layers:
   - Default
   - TransparentFX
@@ -19,8 +22,8 @@ TagManager:
   - PostProcessing
   - Hand
   - ClimbTrigger
-  - 
-  - 
+  - Match
+  - Tele
   - 
   - 
   - 
