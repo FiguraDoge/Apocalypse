@@ -28,6 +28,7 @@ public class HumanController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        startFollowing = transform.position.y - playerObject.transform.position.y < 1f ;
         if (startFollowing)
         {
             navMesh.SetDestination(playerObject.transform.position);

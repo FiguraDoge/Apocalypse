@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Valve.VR;
 
 public class HeliController : MonoBehaviour
 {
     public GameObject goal;
     public float speed;
     public float finalDistance;
+    public GameObject[] destroyOnSceneSwitch;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +27,11 @@ public class HeliController : MonoBehaviour
 
     void endingScene()
     {
-
+        foreach(GameObject o in destroyOnSceneSwitch)
+        {
+            Destroy(o, 1f);
+        }
+        SteamVR_LoadLevel.Begin("End");
     }
 
 
