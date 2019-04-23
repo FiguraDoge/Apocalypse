@@ -6,6 +6,11 @@ public class RespawnPoint : MonoBehaviour
 {
     private PlayerManager playerManager;
 
+    void Start()
+    {
+        playerManager = PlayerManager.instance;
+    }
+
     void OnTriggerStay(Collider other)
     {
         // If player is inside the trigger area

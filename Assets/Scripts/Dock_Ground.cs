@@ -26,7 +26,6 @@ public class Dock_Ground : MonoBehaviour
     public GameObject buttonObj;        // The button object
 
     private Text text;                  // The text in boardText
-    private Transform seat;             // The seat for player on boat 
     private PlayerManager playerManager;
 
     private bool CheckTrigger()
@@ -45,20 +44,21 @@ public class Dock_Ground : MonoBehaviour
     }
 
     public void movePlayer()
-    {               
-        boat.GetComponent<Row>().setPlayerOnBoard(true);            // Tell boat that player is on board
-        playerManager.setGravity(false);                            // Prevent boat from flipping 
-        playerManager.setBoat(boat);                                // Set player boat 
-        playerManager.setTeleport(false);                           // Disable teleporting while on boat
-        playerManager.setPosition(seat.position);                   // Move player to the seat
-        playerManager.setLaserPointer(false);                       // Turn off the layser pointer
-        this.boat = null;                                           // Boat leaves this dock
+    {              
+        playerManager.setBoat(boat);                                        // Set player boat 
+        playerManager.setGravity(false);                                    // Prevent boat from flipping 
+        playerManager.setTeleport(false);                                   // Disable teleporting while on boat
+        playerManager.setPosition(boat.GetComponent<Row>().seat.position);  // Move player to the seat
+        playerManager.setLaserPointer(false);                               // Turn off the layser pointer
+
+        boat.GetComponent<Row>().setPlayerOnBoard(true);                    // Tell boat that player is on board
+        this.boat = null;                                                   // Boat leaves this dock
     }
 
     void Start()
     {
+        buttonObj.SetActive(false);
         text = boardText.GetComponent<Text>();
-        seat = boat.GetComponent<Row>().seat;         
         playerManager = PlayerManager.instance;
     }
 
@@ -68,6 +68,7 @@ public class Dock_Ground : MonoBehaviour
         if (other.tag == "Player")
         {
             buttonObj.SetActive(true);
+            playerManager.setLaserPointer(true);
             if (boat != null)
             {
                 text.text = "Press Trigger to enter the boat";

@@ -28,14 +28,12 @@ public class ControllerUI : MonoBehaviour
         if (button != null)
         {
             button.onClick.Invoke();
-            //Debug.Log("HandlePointerClick", e.target.gameObject);
         }
     }
 
     private void HandlePointerIn(object sender, PointerEventArgs e)
     {
         var button = e.target.GetComponent<Button>();
-        Debug.Log(e.target.gameObject.name);
         if (button != null)
         {
             button.Select();
