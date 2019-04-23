@@ -9,6 +9,7 @@ public class FallingDisableController : MonoBehaviour
 
     public ClimbingTriggerNoGrav climbTrigger;
     public GameObject baseLevel;
+    //public HumanController human;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,5 +36,20 @@ public class FallingDisableController : MonoBehaviour
             //Debug.Log(gameObject.name);
             playerObject.transform.position = new Vector3(playerObject.transform.position.x, baseLevel.transform.position.y, playerObject.transform.position.z);
         }
+        /*
+        if(human != null)
+        {
+            human.startFollowing = true;
+        }
+        */
     }
+    /*
+    void OnTriggerExit(Collider other)
+    {
+        if (human != null)
+        {
+            human.startFollowing = false;
+        }
+    }
+    */
 }

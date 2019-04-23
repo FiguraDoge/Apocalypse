@@ -5,10 +5,12 @@ using UnityEngine;
 public class TorchController : MonoBehaviour
 {
     public GameObject fire;
+    public GameObject heli;
+    private bool fired;
     // Start is called before the first frame update
     void Start()
     {
-        
+        fired = false;   
     }
 
     // Update is called once per frame
@@ -22,10 +24,13 @@ public class TorchController : MonoBehaviour
         MatchController mc = other.gameObject.GetComponent<MatchController>();
         if(mc != null)
         {
-            if (mc.isOnFire())
+            if (mc.isOnFire() && !fired)
             {
                 fire.SetActive(true);
+                fired = true;
+                heli.SetActive(true);
             }
         }
     }
+    
 }
