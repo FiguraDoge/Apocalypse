@@ -1410,7 +1410,6 @@ GameObject:
   - component: {fileID: 1701613993}
   - component: {fileID: 1701613992}
   - component: {fileID: 1701613991}
-  - component: {fileID: 1701613995}
   m_Layer: 0
   m_Name: Wall
   m_TagString: Untagged
@@ -1495,26 +1494,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1701613995
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1701613990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 334de3bea4d514a46baca38d0d113405, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftHandSource: 1
-  rightHandSource: 2
-  climbAction:
-    actionPath: /actions/default/in/GrabPinch
-    needsReinit: 0
-  xMove: 1
-  yMove: 1
-  zMove: 0
 --- !u!1 &1750013931
 GameObject:
   m_ObjectHideFlags: 0
